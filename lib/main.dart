@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jhonyproject/Pages/filtro_page.dart';
-import 'package:jhonyproject/Pages/pontoturistico_page.dart';
+import 'package:jhonyproject/Pages/ponto_turistico_page.dart';
 
 
 //TODO ADDICIONAR --no-sound-null-safety aos args quando rodar

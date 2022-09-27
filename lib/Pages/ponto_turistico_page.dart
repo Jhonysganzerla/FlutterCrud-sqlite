@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:jhonyproject/Dao/ponto_turistico_dao.dart';
 import 'package:jhonyproject/Pages/filtro_page.dart';
-import 'package:jhonyproject/db_helper.dart';
-import 'package:jhonyproject/Model/pontoturistico_model.dart';
+import 'package:jhonyproject/Database/db_helper.dart';
+import 'package:jhonyproject/Model/ponto_turistico_model.dart';
 
 class PontoTuristicoPage extends StatefulWidget {
   @override
@@ -14,19 +15,19 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
   String _pontoTuristicoName = "";
   bool isUpdate = false;
   int pontoturisticoIdForUpdate = 0;
-  DBHelper dbHelper = DBHelper();
+  PontoTuristicoDao pontoTuristicoDao = PontoTuristicoDao();
   final _pontoTuristicoNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    dbHelper = DBHelper();
+    pontoTuristicoDao = PontoTuristicoDao();
     refreshPontoTuristicoList();
   }
 
   refreshPontoTuristicoList() {
     setState(() {
-      pontoturisticos = dbHelper.getPontoTuristicos();
+      pontoturisticos = pontoTuristicoDao.getPontoTuristicos();
     });
   }
 
@@ -98,8 +99,8 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                   if (isUpdate) {
                     if (_formStateKey.currentState!.validate()) {
                       _formStateKey.currentState!.save();
-                      dbHelper
-                          .update(PontoTuristico(pontoturisticoIdForUpdate,
+                      pontoTuristicoDao
+                          .salvar(PontoTuristico(pontoturisticoIdForUpdate,
                               _pontoTuristicoName, DateTime.now()))
                           .then((data) {
                         setState(() {
@@ -110,7 +111,7 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                   } else {
                     if (_formStateKey.currentState!.validate()) {
                       _formStateKey.currentState!.save();
-                      dbHelper.add(PontoTuristico(
+                      pontoTuristicoDao.salvar(PontoTuristico(
                           null, _pontoTuristicoName, DateTime.now()));
                     }
                   }
@@ -221,7 +222,7 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                           iconSize: 15,
                           icon: Icon(Icons.delete),
                           onPressed: () {
-                            dbHelper.delete(pontoturistico.id!);
+                            pontoTuristicoDao.delete(pontoturistico.id!);
                             refreshPontoTuristicoList();
                           },
                         ),

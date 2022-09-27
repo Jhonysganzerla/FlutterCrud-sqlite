@@ -1,4 +1,4 @@
-import 'package:jhonyproject/Model/pontoturistico_model.dart';
+import 'package:jhonyproject/Model/ponto_turistico_model.dart';
 
 class PontoTuristicoDetalhe {
   int? id;
