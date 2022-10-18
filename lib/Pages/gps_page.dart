@@ -39,6 +39,10 @@ class GpsPage extends StatefulWidget {
                   child: Text('Obter a ultima localizacao conhecida (cache)')
               ),
               ElevatedButton(
+                  onPressed: _obterLocalizacaoAtual,
+                  child: Text('Obter localização Atual')
+              ),
+              ElevatedButton(
                   onPressed: _limparLog,
                   child: Text('Limpar Log')
               ),
@@ -118,11 +122,35 @@ class GpsPage extends StatefulWidget {
       );
     }
 
-
     void _limparLog(){
       setState(() {
         _linhas.clear();
       });
+    }
+
+    Future<bool> _servicoHabilitado() async {
+        bool servicoHabilitado = await Geolocator.isLocationServiceEnabled();
+        if(!servicoHabilitado){
+          await _showDialogMessage('Para utilizar este recurso você deve '
+              'habilitar o serviço de localização do dispositivo');
+          Geolocator.openLocationSettings();
+          return false;
+        }
+        return true;
+    }
+
+    void _obterLocalizacaoAtual() async{
+      bool servicohabilitado = await _servicoHabilitado();
+      if(!servicohabilitado){
+        return;
+      }
+       Position position = await Geolocator.getCurrentPosition();
+
+      setState(() {
+          _linhas.add('Latitude: ${position!.latitude} | Longitude: ${position!.longitude} ');
+        }
+      );
+
     }
 }
 
