@@ -14,9 +14,15 @@ class FiltroPage extends StatefulWidget {
 
 class _FiltroPageState extends State<FiltroPage> {
   final _camposParaOrdenacao = {
+    PontoTuristico.CAMPO_ID: 'id',
+    PontoTuristico.CAMPO_NOME: 'name',
+    PontoTuristico.CAMPO_DATAINC: 'datainc'
+  };
+
+  final _camposParaOrdenacaoLegivel = {
     PontoTuristico.CAMPO_ID: 'ID',
     PontoTuristico.CAMPO_NOME: 'Nome',
-    PontoTuristico.CAMPO_DATAINC: 'Data Adição'
+    PontoTuristico.CAMPO_DATAINC: 'Data de Criacao'
   };
 
   late final SharedPreferences _prefs;
@@ -69,7 +75,7 @@ class _FiltroPageState extends State<FiltroPage> {
                   groupValue: _campoOrdenacao,
                   onChanged: _onCampoOrdenacaoChanged,
                 ),
-                Text(_camposParaOrdenacao[campo]!),
+                Text(_camposParaOrdenacaoLegivel[campo]!),
               ],
             ),
           const Divider(),

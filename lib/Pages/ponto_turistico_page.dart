@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jhonyproject/Dao/ponto_turistico_dao.dart';
 import 'package:jhonyproject/Pages/filtro_page.dart';
-import 'package:jhonyproject/Database/db_helper.dart';
 import 'package:jhonyproject/Model/ponto_turistico_model.dart';
+import 'package:jhonyproject/Pages/gps_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PontoTuristicoPage extends StatefulWidget {
   @override
@@ -25,9 +26,17 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
     refreshPontoTuristicoList();
   }
 
-  refreshPontoTuristicoList() {
+  refreshPontoTuristicoList() async {
+    final prefs = await SharedPreferences.getInstance();
+    final campoordenacao = prefs.getString(FiltroPage.chaveCampoOrdenacao) ?? PontoTuristico.CAMPO_ID;
+    final usarOrdemDecrescente = prefs.getBool(FiltroPage.chaveOrdenacaoDrescente) == true;
+    final filtrodescricao = prefs.getString(FiltroPage.chaveFiltroNome) ?? "";
     setState(() {
-      pontoturisticos = pontoTuristicoDao.getPontoTuristicos();
+      pontoturisticos = pontoTuristicoDao.getPontoTuristicos(
+            filtro: filtrodescricao,
+            campoOrdenacao: campoordenacao,
+            usarOrdemDecrescente: usarOrdemDecrescente,
+          );
     });
   }
 
@@ -40,6 +49,10 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
           IconButton(
             icon: const Icon(Icons.filter_list),
             onPressed: _abrirPaginaFiltro,
+          ),
+          IconButton(
+            icon: const Icon(Icons.map),
+            onPressed: _abrirPaginaGPS,
           )
         ],
       ),
@@ -238,7 +251,18 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
   void _abrirPaginaFiltro() {
     final navigator = Navigator.of(context);
     navigator.pushNamed(FiltroPage.ROUTE_NAME).then((alterouValores) {
-      if (alterouValores == true) {}
+      if (alterouValores == true) {
+          refreshPontoTuristicoList();
+      }
+    });
+  }
+
+  void _abrirPaginaGPS() {
+    final navigator = Navigator.of(context);
+    navigator.pushNamed(GpsPage.ROUTE_NAME).then((alterouValores) {
+      if (alterouValores == true) {
+
+      }
     });
   }
 }

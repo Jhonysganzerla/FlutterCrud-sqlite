@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jhonyproject/Pages/filtro_page.dart';
+import 'package:jhonyproject/Pages/gps_page.dart';
 import 'package:jhonyproject/Pages/ponto_turistico_page.dart';
 
 
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       home: PontoTuristicoPage(),
       routes: {
         FiltroPage.ROUTE_NAME: (BuildContext context) => FiltroPage(),
+        GpsPage.ROUTE_NAME: (BuildContext context) => GpsPage(),
       },
     );
   }

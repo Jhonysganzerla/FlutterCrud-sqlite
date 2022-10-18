@@ -17,9 +17,28 @@ class PontoTuristicoDao {
     }
   }
 
-  Future<List<PontoTuristico>> getPontoTuristicos() async {
+  Future<List<PontoTuristico>> getPontoTuristicos(
+      {
+        String filtro = '',
+        String campoOrdenacao = PontoTuristico.CAMPO_ID,
+        bool usarOrdemDecrescente = false
+      }) async {
     var dbClient = await dbHelper.database;
-    List<dynamic> maps = await dbClient.query(PontoTuristico.TABELA, columns: ['id', 'name', 'datainc']);
+    String? where;
+    if (filtro.isNotEmpty) {
+      where = "UPPER(${PontoTuristico.CAMPO_NOME}) LIKE '${filtro.toUpperCase()}%'";
+    }
+    var orderBy = campoOrdenacao;
+    if (usarOrdemDecrescente) {
+      orderBy += ' DESC';
+    }
+
+    List<dynamic> maps = await dbClient.query
+      (PontoTuristico.TABELA,
+        columns: ['id', 'name', 'datainc'],
+        where: where,
+        orderBy: orderBy,
+    );
     List<PontoTuristico> pontoturisticos = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
