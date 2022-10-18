@@ -38,6 +38,10 @@ class GpsPage extends StatefulWidget {
                   onPressed: _obterUltimaLocalizacao,
                   child: Text('Obter a ultima localizacao conhecida (cache)')
               ),
+              ElevatedButton(
+                  onPressed: _limparLog,
+                  child: Text('Limpar Log')
+              ),
               const Divider(),
               Expanded(
                   child:ListView.builder(
@@ -63,8 +67,9 @@ class GpsPage extends StatefulWidget {
       setState(() {
         if(position == null){
           _linhas.add('Nenhuma localização encontrada');
+        }else{
+          _linhas.add('Latitude: ${position.latitude} | Longitude: ${position.longitude} ');
         }
-        _linhas.add('Latitude: ${position!.latitude} | Longitude: ${position.longitude} ');
       });
     }
 
@@ -111,6 +116,13 @@ class GpsPage extends StatefulWidget {
             ],
           )
       );
+    }
+
+
+    void _limparLog(){
+      setState(() {
+        _linhas.clear();
+      });
     }
 }
 
