@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jhonyproject/Pages/filtro_page.dart';
 import 'package:jhonyproject/Pages/gps_page.dart';
+import 'package:jhonyproject/Pages/ponto_turistico_detalhes_page.dart';
 import 'package:jhonyproject/Pages/ponto_turistico_page.dart';
 
 

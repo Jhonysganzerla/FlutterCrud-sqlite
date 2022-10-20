@@ -33,7 +33,9 @@ class DBHelper {
         CREATE TABLE ${PontoTuristico.TABELA}(
         ${PontoTuristico.CAMPO_ID} INTEGER PRIMARY KEY,
         ${PontoTuristico.CAMPO_NOME} TEXT,
-        ${PontoTuristico.CAMPO_DATAINC} DATE)
+        ${PontoTuristico.CAMPO_DATAINC} DATE,
+        ${PontoTuristico.CAMPO_DETALHES} TEXT,
+        ${PontoTuristico.CAMPO_DIFERENCIAIS} TEXT)
         ''');
   }
 
