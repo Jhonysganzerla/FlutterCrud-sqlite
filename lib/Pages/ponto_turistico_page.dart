@@ -177,14 +177,6 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                         MaterialPageRoute(builder: (_) =>
                             PontoTuristicoDetalhePage(pontoturistico: pontoturistico)));
 
-
-                    // Navigator.pushNamed(context, "/detalhes", arguments: {pontoturistico: pontoturistico});
-
-                    // MaterialPageRoute(builder: (context) => const PontoTuristicoDetalhePage(
-                    //     key:null,
-                    //     pontoturistico: pontoturistico ,
-                    //   )
-                    // );
                   },
                 )
               ),

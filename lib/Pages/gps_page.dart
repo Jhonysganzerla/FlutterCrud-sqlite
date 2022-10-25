@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:jhonyproject/Pages/mapas_page.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 
 class GpsPage extends StatefulWidget {
   const GpsPage({Key? key}) : super(key: key);
@@ -18,6 +20,11 @@ class GpsPage extends StatefulWidget {
     StreamSubscription<Position>?  _subscription;
 
     bool get _monitorarLocalizacao => _subscription != null;
+    Position? _localizacaoAtual;
+    final _controller = TextEditingController();
+
+    String get _textoLocalizacao => _localizacaoAtual == null ? '' : 'Latitude: ${_localizacaoAtual!.latitude} | Longitude:  ${_localizacaoAtual!.longitude
+    }';
 
     @override
     void initState() {
@@ -40,17 +47,57 @@ class GpsPage extends StatefulWidget {
           child: Column(
             children: [
               ElevatedButton(
-                  onPressed: _obterUltimaLocalizacao,
-                  child: const Text('Obter a ultima localizacao conhecida (cache)')
-              ),
-              ElevatedButton(
                   onPressed: _obterLocalizacaoAtual,
                   child: const Text('Obter localização Atual')
               ),
-              ElevatedButton(
-                  onPressed: _monitorarLocalizacao ? _pararMonitoramento : _iniciarMonitoramento,
-                  child: Text(_monitorarLocalizacao ? 'Parar Monitoramento' : 'Iniciar Monitoramento')
+
+              if(this._localizacaoAtual != null)
+                Padding(padding: const  EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(child: Text(_textoLocalizacao),),
+                    ElevatedButton(
+                        onPressed: _abrirMapaInterno,
+                        child: const Icon(Icons.map),
+                    ),
+                    ],
+
+                  ),
+    ),
+              Padding(padding: const  EdgeInsets.all(10),
+                child: TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    labelText: 'Endereço ou ponto de referencia',
+                    suffixIcon: IconButton(icon:
+                      Icon(Icons.map),
+                      tooltip: 'Abrir no Mapa',
+                      onPressed: _abrirCoordenadasNoMapa,
+                    )
+                  ),
+                ),
+
               ),
+
+
+
+
+    // ElevatedButton(
+              //     onPressed: _obterUltimaLocalizacao,
+              //     child: const Text('Obter a ultima localizacao conhecida (cache)')
+              // ),
+              // Row(
+              //   children: [
+              //
+              //     Padding(padding: const EdgeInsets.all(10), ),
+              //     ElevatedButton(
+              //         onPressed: _monitorarLocalizacao ? _pararMonitoramento : _iniciarMonitoramento,
+              //         child: Text(_monitorarLocalizacao ? 'Parar Monitoramento' : 'Iniciar Monitoramento')
+              //     ),
+              //
+              //   ],
+              // ),
+
               ElevatedButton(
                   onPressed: _limparLog,
                   child: const Text('Limpar Log')
@@ -67,26 +114,27 @@ class GpsPage extends StatefulWidget {
                           )
                   ))
             ],
+
           ),
         );
 
-    _obterUltimaLocalizacao() async {
-      bool permissoesPermitidas = await _permissoesPermitidas();
-      if (!permissoesPermitidas) {
-        return;
-      }
-
-      Position? position = await Geolocator.getLastKnownPosition();
-
-      setState(() {
-        if (position == null) {
-          _linhas.add('Nenhuma localização encontrada');
-        } else {
-          _linhas.add('Latitude: ${position.latitude} | Longitude: ${position
-              .longitude} ');
-        }
-      });
-    }
+    // _obterUltimaLocalizacao() async {
+    //   bool permissoesPermitidas = await _permissoesPermitidas();
+    //   if (!permissoesPermitidas) {
+    //     return;
+    //   }
+    //
+    //   Position? position = await Geolocator.getLastKnownPosition();
+    //
+    //   setState(() {
+    //     if (position == null) {
+    //       _linhas.add('Nenhuma localização encontrada');
+    //     } else {
+    //       _linhas.add('Latitude: ${position.latitude} | Longitude: ${position
+    //           .longitude} ');
+    //     }
+    //   });
+    // }
 
     Future<bool> _permissoesPermitidas() async {
       LocationPermission permission = await Geolocator.checkPermission();
@@ -160,27 +208,61 @@ class GpsPage extends StatefulWidget {
       Position position = await Geolocator.getCurrentPosition();
 
       setState(() {
+        _localizacaoAtual = position;
         _linhas.add('Latitude: ${position!.latitude} | Longitude: ${position!.longitude} ');
       });
     }
+    //
+    // void _iniciarMonitoramento(){
+    //   _subscription = Geolocator.getPositionStream(
+    //     locationSettings: LocationSettings(
+    //       distanceFilter: 30,
+    //       timeLimit: Duration(seconds: 2),
+    //     ),
+    //   ).listen((Position position) {
+    //     setState(() {
+    //       _linhas.add('Latitude: ${position!.latitude} | Longitude: ${position!.longitude} ');
+    //     });
+    //   });
+    //
+    // }
+    //
+    // void _pararMonitoramento(){
+    //   _subscription!.cancel();
+    //   }
 
-    void _iniciarMonitoramento(){
-      _subscription = Geolocator.getPositionStream(
-        locationSettings: LocationSettings(
-          distanceFilter: 30,
-          timeLimit: Duration(seconds: 2),
-        ),
-      ).listen((Position position) {
-        setState(() {
-          _linhas.add('Latitude: ${position!.latitude} | Longitude: ${position!.longitude} ');
-        });
-      });
+
+    _abrirMapaInterno(){
+      if(_localizacaoAtual == null){
+        return;
+      }
+
+      Navigator.push(context, MaterialPageRoute(builder:
+      (BuildContext context) => MapasPage(latitude: _localizacaoAtual!.latitude
+      , longitude: _localizacaoAtual!.longitude)
+      ));
+    }
+
+    _abrirCoordenadasNoMapa(){
+      if(_controller.text.trim().isEmpty){
+        return;
+      }
+      MapsLauncher.launchCoordinates(
+        _localizacaoAtual!.latitude, _localizacaoAtual!.longitude
+      );
+      return;
+    }
+
+
+    _abrirMapaExterno(){
+      if(_controller.text.trim().isEmpty){
+        return;
+      }
+
+      MapsLauncher.launchQuery(_controller.text);
 
     }
 
-    void _pararMonitoramento(){
-      _subscription!.cancel();
-    }
   }
 
 
