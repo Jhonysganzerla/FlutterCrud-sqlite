@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:jhonyproject/Model/ponto_turistico_model.dart';
 import 'package:jhonyproject/Pages/mapas_page.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
 class GpsPage extends StatefulWidget {
-  const GpsPage({Key? key}) : super(key: key);
+  final PontoTuristico pontoturistico;
+
+  const GpsPage({Key? key, required this.pontoturistico}) : super(key: key);
 
   static const ROUTE_NAME = '/gps';
 
@@ -23,22 +26,58 @@ class GpsPage extends StatefulWidget {
     Position? _localizacaoAtual;
     final _controller = TextEditingController();
 
-    String get _textoLocalizacao => _localizacaoAtual == null ? '' : 'Latitude: ${_localizacaoAtual!.latitude} | Longitude:  ${_localizacaoAtual!.longitude
-    }';
+    String get _textoLocalizacao => _localizacaoAtual == null ? '' : 'Latitude: ${_localizacaoAtual!.latitude} | Longitude:  ${_localizacaoAtual!.longitude}';
 
     @override
     void initState() {
+      preencheController();
+
       super.initState();
     }
 
+    preencheController() async{
+      if(_localizacaoAtual == null){
+        Position a = new Position
+          (longitude: double.parse(widget.pontoturistico.latitude != "" ?
+            widget.pontoturistico.latitude : "0"),
+            latitude: double.parse(
+                widget.pontoturistico.longitude != "" ?
+                widget.pontoturistico.longitude : "0"
+            ),
+            timestamp: null, accuracy: 1, altitude: 1, heading: 1, speed: 1, speedAccuracy: 1);
+          setState(() {
+            _localizacaoAtual = a;
+            _linhas.add('Latitude: ${widget.pontoturistico.latitude} | Longitude: ${widget.pontoturistico.longitude} ');
+          });
+      }
+    }
+
+    Future<bool> _onVoltarClick() async {
+      String lat = _localizacaoAtual != null ? _localizacaoAtual!.latitude.toString() : '';
+      String long = _localizacaoAtual != null ? _localizacaoAtual!.longitude.toString() : '';
+      String mapa = _controller != null ? _controller.text : '';
+
+      widget.pontoturistico.latitude = lat;
+      widget.pontoturistico.longitude = long;
+      widget.pontoturistico.nomepontomapa = mapa;
+
+      Navigator.of(context).pop(widget.pontoturistico);
+      return true;
+    }
     @override
     Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Usando GPS'),
-        ),
-        body: _criarBody(),
-      );
+      return
+        WillPopScope(
+          onWillPop: _onVoltarClick,
+          child: (
+              Scaffold(
+                appBar: AppBar(
+                  title: const Text('Usando GPS'),
+                ),
+                body: _criarBody(),
+              )
+          ),
+        );
     }
 
     Widget _criarBody() =>
@@ -201,7 +240,7 @@ class GpsPage extends StatefulWidget {
     }
 
     void _obterLocalizacaoAtual() async {
-      bool servicohabilitado = await _servicoHabilitado();
+      bool servicohabilitado = await _servicoHabilitado() && await _permissoesPermitidas();
       if (!servicohabilitado) {
         return;
       }
@@ -243,10 +282,17 @@ class GpsPage extends StatefulWidget {
       ));
     }
 
-    _abrirCoordenadasNoMapa(){
+    _abrirCoordenadasNoMapa() async{
+      bool servicohabilitado = await _servicoHabilitado() && await _permissoesPermitidas();
+      if (!servicohabilitado) {
+        return;
+      }
+
+
       if(_controller.text.trim().isEmpty){
         return;
       }
+
       MapsLauncher.launchCoordinates(
         _localizacaoAtual!.latitude, _localizacaoAtual!.longitude
       );

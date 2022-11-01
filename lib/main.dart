@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       home: PontoTuristicoPage(),
       routes: {
         FiltroPage.ROUTE_NAME: (BuildContext context) => FiltroPage(),
-        GpsPage.ROUTE_NAME: (BuildContext context) => GpsPage(),
+        // GpsPage.ROUTE_NAME: (BuildContext context) => GpsPage(pontoturistico:),
       },
     );
   }

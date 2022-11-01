@@ -35,7 +35,16 @@ class PontoTuristicoDao {
 
     List<dynamic> maps = await dbClient.query
       (PontoTuristico.TABELA,
-        columns: ['id', 'name', 'datainc'],
+        columns: [
+          PontoTuristico.CAMPO_ID,
+          PontoTuristico.CAMPO_NOME,
+          PontoTuristico.CAMPO_DATAINC,
+          PontoTuristico.CAMPO_DETALHES,
+          PontoTuristico.CAMPO_DIFERENCIAIS,
+          PontoTuristico.CAMPO_LATITUDE,
+          PontoTuristico.CAMPO_LONGITUDE,
+          PontoTuristico.CAMPO_NOMEPONTOMAPA,
+          ],
         where: where,
         orderBy: orderBy,
     );

@@ -35,7 +35,10 @@ class DBHelper {
         ${PontoTuristico.CAMPO_NOME} TEXT,
         ${PontoTuristico.CAMPO_DATAINC} DATE,
         ${PontoTuristico.CAMPO_DETALHES} TEXT,
-        ${PontoTuristico.CAMPO_DIFERENCIAIS} TEXT)
+        ${PontoTuristico.CAMPO_DIFERENCIAIS} TEXT,
+        ${PontoTuristico.CAMPO_LATITUDE} TEXT,
+        ${PontoTuristico.CAMPO_LONGITUDE} TEXT,
+        ${PontoTuristico.CAMPO_NOMEPONTOMAPA} TEXT)
         ''');
   }
 

@@ -17,6 +17,9 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
   String _pontoTuristicoName = "";
   String _pontoTuristicoDetalhes = "";
   String _pontoTuristicoDiferenciais = "";
+  String _pontoTuristicoLatitude = "";
+  String _pontoTuristicoLongitude = "";
+  String _pontoTuristicoNomePontoMapa = "";
   int pontoturisticoIdForUpdate = 0;
 
 
@@ -56,10 +59,6 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
             icon: const Icon(Icons.filter_list),
             onPressed: _abrirPaginaFiltro,
           ),
-          IconButton(
-            icon: const Icon(Icons.map),
-            onPressed: _abrirPaginaGPS,
-          )
         ],
       ),
       body: Column(
@@ -119,14 +118,24 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                     if (_formStateKey.currentState!.validate()) {
                       _formStateKey.currentState!.save();
                       pontoTuristicoDao
-                          .salvar(PontoTuristico(pontoturisticoIdForUpdate,
-                              _pontoTuristicoName, DateTime.now(),_pontoTuristicoDetalhes,_pontoTuristicoDiferenciais))
+                          .salvar(PontoTuristico(
+                          pontoturisticoIdForUpdate,
+                          _pontoTuristicoName,
+                          DateTime.now(),
+                          _pontoTuristicoDetalhes,
+                          _pontoTuristicoDiferenciais,
+                          _pontoTuristicoLatitude,
+                          _pontoTuristicoLongitude,
+                          _pontoTuristicoNomePontoMapa))
                           .then((data) {
                         setState(() {
                           isUpdate = false;
                           _pontoTuristicoNameController.text = '';
                           _pontoTuristicoDetalhes = '';
                           _pontoTuristicoDiferenciais = '';
+                          _pontoTuristicoLatitude = '';
+                          _pontoTuristicoLongitude = '';
+                          _pontoTuristicoNomePontoMapa = '';
                         });
                       });
                     }
@@ -134,7 +143,14 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                     if (_formStateKey.currentState!.validate()) {
                       _formStateKey.currentState!.save();
                       pontoTuristicoDao.salvar(PontoTuristico(
-                          null, _pontoTuristicoName, DateTime.now(),"",""));
+                          null,
+                          _pontoTuristicoName,
+                          DateTime.now(),
+                          "",
+                          "",
+                          "",
+                          "",
+                          ""));
                     }
                   }
                   refreshPontoTuristicoList();
@@ -170,13 +186,26 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    PontoTuristico pontoturistico = PontoTuristico(pontoturisticoIdForUpdate,
-                        _pontoTuristicoName, DateTime.now(),_pontoTuristicoDetalhes ?? "",_pontoTuristicoDiferenciais ?? "");
+                    PontoTuristico pontoturistico = PontoTuristico(
+                        pontoturisticoIdForUpdate,
+                        _pontoTuristicoName,
+                        DateTime.now(),
+                        _pontoTuristicoDetalhes ?? "",
+                        _pontoTuristicoDiferenciais ?? "",
+                        _pontoTuristicoLatitude ?? "",
+                        _pontoTuristicoLongitude ?? "",
+                        _pontoTuristicoNomePontoMapa ?? "");
 
-                   Object a = Navigator.push(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (_) =>
-                            PontoTuristicoDetalhePage(pontoturistico: pontoturistico)));
-
+                            PontoTuristicoDetalhePage(
+                                pontoturistico: pontoturistico,
+                                pontoTuristicoDao: pontoTuristicoDao)
+                        )
+                    ).whenComplete(() =>
+                      refreshPontoTuristicoList(),
+                    );
+                   isUpdate = false;
                   },
                 )
               ),
@@ -233,7 +262,7 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                 ),
               )
             ],
-            rows: pontoturisticos!
+              rows: pontoturisticos!
                 .map(
                   (pontoturistico) => DataRow(
                     cells: [
@@ -251,6 +280,9 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                             pontoturisticoIdForUpdate = pontoturistico.id!;
                             _pontoTuristicoDiferenciais = pontoturistico.diferenciais;
                             _pontoTuristicoDetalhes = pontoturistico.detalhes;
+                            _pontoTuristicoLatitude = pontoturistico.latitude;
+                            _pontoTuristicoLongitude = pontoturistico.longitude;
+                            _pontoTuristicoNomePontoMapa = pontoturistico.nomepontomapa;
                           });
                           _pontoTuristicoNameController.text = pontoturistico.name;
                         },
@@ -289,19 +321,4 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
     });
   }
 
-  void _abrirPaginaGPS() {
-    final navigator = Navigator.of(context);
-    navigator.pushNamed(GpsPage.ROUTE_NAME).then((alterouValores) {
-      if (alterouValores == true) {
-
-      }
-    });
-  }
-
-  void _abrirPaginaDetalhes() {
-    final navigator = Navigator.of(context);
-    navigator.pushNamed(PontoTuristicoDetalhePage.ROUTE_NAME).then((it) {
-      print(it);
-    });
-  }
 }
