@@ -74,7 +74,6 @@ class _PontoTuristicoDetalhePageState extends State<PontoTuristicoDetalhePage>{
     ).then((value) => preencheMapas(value));
   }
 
-  //TODO FAZER ISSO CHAMAR NO THEN ACIMA
   preencheMapas(value){
     widget.pontoturistico.latitude = value.latitude;
     widget.pontoturistico.longitude = value.longitude;
