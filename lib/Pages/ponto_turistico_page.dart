@@ -20,6 +20,9 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
   String _pontoTuristicoLatitude = "";
   String _pontoTuristicoLongitude = "";
   String _pontoTuristicoNomePontoMapa = "";
+  String _pontoTuristicoCep = "";
+  String _pontoTuristicoLogradouro = "";
+  String _pontoTuristicoBairro = "";
   int pontoturisticoIdForUpdate = 0;
 
 
@@ -126,7 +129,10 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                           _pontoTuristicoDiferenciais,
                           _pontoTuristicoLatitude,
                           _pontoTuristicoLongitude,
-                          _pontoTuristicoNomePontoMapa))
+                          _pontoTuristicoNomePontoMapa,
+                          _pontoTuristicoCep,
+                          _pontoTuristicoLogradouro,
+                          _pontoTuristicoBairro))
                           .then((data) {
                         setState(() {
                           isUpdate = false;
@@ -136,6 +142,9 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                           _pontoTuristicoLatitude = '';
                           _pontoTuristicoLongitude = '';
                           _pontoTuristicoNomePontoMapa = '';
+                          _pontoTuristicoCep = '';
+                          _pontoTuristicoLogradouro = '';
+                          _pontoTuristicoBairro = '';
                         });
                       });
                     }
@@ -146,6 +155,9 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                           null,
                           _pontoTuristicoName,
                           DateTime.now(),
+                          "",
+                          "",
+                          "",
                           "",
                           "",
                           "",
@@ -194,7 +206,10 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                         _pontoTuristicoDiferenciais ?? "",
                         _pontoTuristicoLatitude ?? "",
                         _pontoTuristicoLongitude ?? "",
-                        _pontoTuristicoNomePontoMapa ?? "");
+                        _pontoTuristicoNomePontoMapa ?? "",
+                        _pontoTuristicoCep    ?? "",
+                        _pontoTuristicoLogradouro ?? "",
+                        _pontoTuristicoBairro ?? "");
 
                     Navigator.push(context,
                         MaterialPageRoute(builder: (_) =>
@@ -283,6 +298,9 @@ class _PontoTuristicoPageState extends State<PontoTuristicoPage> {
                             _pontoTuristicoLatitude = pontoturistico.latitude;
                             _pontoTuristicoLongitude = pontoturistico.longitude;
                             _pontoTuristicoNomePontoMapa = pontoturistico.nomepontomapa;
+                            _pontoTuristicoCep = pontoturistico.cep;
+                            _pontoTuristicoLogradouro  = pontoturistico.logradouro;
+                            _pontoTuristicoBairro  = pontoturistico.bairro;
                           });
                           _pontoTuristicoNameController.text = pontoturistico.name;
                         },

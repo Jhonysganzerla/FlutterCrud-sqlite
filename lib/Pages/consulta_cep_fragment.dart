@@ -21,7 +21,7 @@ class _ConsultaCepFragmentState extends State<ConsultaCepFragment>{
     bool _loading = false;
 
     final _cepFormatter = MaskTextInputFormatter(
-        mask:'####-###',
+        mask:'#####-###',
         filter:{'#': RegExp(r'[0-9]')
       }
     );

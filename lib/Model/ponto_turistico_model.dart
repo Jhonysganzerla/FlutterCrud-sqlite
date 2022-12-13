@@ -11,23 +11,37 @@ class PontoTuristico {
   static const CAMPO_LATITUDE = 'latitude';
   static const CAMPO_LONGITUDE = 'longitude';
   static const CAMPO_NOMEPONTOMAPA = 'nomepontomapa';
+  static const CAMPO_CEP = 'cep';
+  static const CAMPO_LOGRADOURO = 'logradouro';
+  static const CAMPO_BAIRRO = 'bairro';
 
   static const TABELA = 'pontoturistico';
+
+  String? Tabela = "";
 
   int? id;
   DateTime datainc = DateTime.now();
   String name = "";
-  String? Tabela = "";
-
   String detalhes = "";
   String diferenciais = "";
-
   String latitude = "";
   String longitude = "";
-
   String nomepontomapa = "";
+  String cep = "";
+  String logradouro = "";
+  String bairro = "";
 
-  PontoTuristico(this.id, this.name, this.datainc, this.detalhes, this.diferenciais, this.latitude,this.longitude,this.nomepontomapa);
+  PontoTuristico(this.id,
+      this.name,
+      this.datainc,
+      this.detalhes,
+      this.diferenciais,
+      this.latitude,
+      this.longitude,
+      this.nomepontomapa,
+      this.cep,
+      this.logradouro,
+      this.bairro);
 
   Map<String, Object?> toMap() {
     var map = {
@@ -39,6 +53,9 @@ class PontoTuristico {
       CAMPO_LATITUDE: latitude,
       CAMPO_LONGITUDE: longitude,
       CAMPO_NOMEPONTOMAPA: nomepontomapa,
+      CAMPO_CEP: cep,
+      CAMPO_LOGRADOURO: logradouro,
+      CAMPO_BAIRRO: bairro,
     };
     return map;
   }
@@ -52,5 +69,9 @@ class PontoTuristico {
     latitude = map[CAMPO_LATITUDE] is String ? map[CAMPO_LATITUDE] : null;
     longitude = map[CAMPO_LONGITUDE] is String ? map[CAMPO_LONGITUDE] : null;
     nomepontomapa = map[CAMPO_NOMEPONTOMAPA] is String ? map[CAMPO_NOMEPONTOMAPA] : null;
+
+    cep = map[CAMPO_CEP] is String ? map[CAMPO_CEP] : null;
+    logradouro = map[CAMPO_LOGRADOURO] is String ? map[CAMPO_LOGRADOURO] : null;
+    bairro = map[CAMPO_BAIRRO] is String ? map[CAMPO_BAIRRO] : null;
   }
 }
